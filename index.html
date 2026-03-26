@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="id">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style type="text/tailwindcss">
+			@theme {
+				--color-cliford: #f0f0f0;
+				--color-sky-ink: #0f2d4a;
+				--color-cloud: #eef2f7;
+				--color-mist: #c5d4e0;
+				--color-rain: #3a7bd5;
+				--color-sun: #f5a623;
+				--color-fog: #8fa8be;
+				--color-card: #ffffff;
+			}
+
+			body {
+				font-family: "Plus Jakarta Sans", sans-serif;
+				background-color: #eef2f7;
+				background-image: radial-gradient(#c5d4e0 1px, transparent 1px);
+				background-size: 28px 28px;
+			}
+
+			.mono {
+				font-family: "Space Mono", monospace;
+			}
+
+			.card {
+				background: white;
+				border-radius: 20px;
+				border: 1.5px solid #dde6ef;
+				box-shadow:
+					0 4px 24px rgba(15, 45, 74, 0.07),
+					0 1px 4px rgba(15, 45, 74, 0.05);
+				transition:
+					transform 0.2s,
+					box-shadow 0.2s;
+			}
+
+			.card:hover {
+				transform: translateY(-2px);
+				box-shadow:
+					0 8px 32px rgba(15, 45, 74, 0.12),
+					0 2px 8px rgba(15, 45, 74, 0.07);
+			}
+
+			.card-dark {
+				background: #0f2d4a;
+				border-radius: 20px;
+				border: 1.5px solid #1a3f60;
+				box-shadow:
+					0 4px 24px rgba(15, 45, 74, 0.18),
+					0 1px 4px rgba(15, 45, 74, 0.1);
+			}
+
+			.card-accent {
+				background: #3a7bd5;
+				border-radius: 20px;
+				border: 1.5px solid #2d6abf;
+				box-shadow: 0 4px 24px rgba(58, 123, 213, 0.25);
+			}
+
+			.badge {
+				background: rgba(15, 45, 74, 0.07);
+				border-radius: 999px;
+				padding: 4px 12px;
+				font-size: 11px;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				font-weight: 600;
+				color: #8fa8be;
+			}
+
+			input:focus {
+				outline: none;
+				box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+			}
+		</style>
+		<title>Cuaca Sekarang</title>
+	</head>
+	<body class="min-h-screen">
+		<!-- NAVBAR -->
+		<nav
+			class="bg-white/80 backdrop-blur-md border-b border-[#dde6ef] sticky top-0 z-50"
+		>
+			<div
+				class="max-w-5xl mx-auto px-6 py-3 flex items-center gap-4 flex-wrap"
+			>
+				<div class="flex items-center gap-2 mr-auto">
+					<div
+						class="w-8 h-8 bg-rain rounded-xl flex items-center justify-center text-white text-sm"
+					>
+						☁
+					</div>
+					<h1 class="mono text-sky-ink font-bold text-lg tracking-tight">
+						cuaca.id
+					</h1>
+				</div>
+
+				<div class="flex items-center gap-2 flex-1 max-w-sm">
+					<div
+						class="flex-1 flex items-center bg-cloud border border-[#dde6ef] rounded-xl px-3 py-2 gap-2"
+					>
+						<span class="text-fog text-sm">🔍</span>
+						<input
+							type="text"
+							id="city-input"
+							placeholder="Cari kota..."
+							class="flex-1 bg-transparent text-sky-ink text-sm placeholder-fog border-none focus:ring-0 p-0"
+						/>
+					</div>
+					<button
+						type="button"
+						id="btn-cari"
+						class="bg-sky-ink text-white font-semibold px-5 py-2 text-sm rounded-xl hover:bg-rain transition-colors duration-200"
+					>
+						Cari
+					</button>
+				</div>
+
+				<button
+					type="button"
+					id="btn-lokasi"
+					class="flex items-center gap-2 bg-cloud text-sky-ink font-semibold px-4 py-2 text-sm rounded-xl border border-[#dde6ef] hover:border-rain hover:text-rain transition-colors duration-200"
+				>
+					<img src="asset/map-pin (1).svg" alt="map-pin" class="w-4 h-4" />
+					Lokasi Saya
+				</button>
+			</div>
+		</nav>
+
+		<!-- MAIN CONTENT -->
+		<main class="max-w-5xl mx-auto px-6 py-10">
+			<!-- Header kota -->
+			<div class="mb-8 flex items-end justify-between flex-wrap gap-3">
+				<div>
+					<h2
+						id="city-name"
+						class="text-sky-ink text-4xl font-extrabold tracking-tight"
+					>
+						-- , --
+					</h2>
+					<p id="tanggal" class="text-fog text-sm mt-1 font-medium">
+						Senin, 1 Januari 2025
+					</p>
+				</div>
+				<span class="badge">🟢 Live</span>
+			</div>
+
+			<!-- GRID CUACA -->
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+				<!-- Suhu utama -->
+				<div
+					class="card-dark col-span-2 md:col-span-1 p-7 flex flex-col justify-between min-h-[200px]"
+				>
+					<span class="text-fog text-xs font-semibold tracking-widest uppercase"
+						>Suhu Saat Ini</span
+					>
+					<div>
+						<div class="flex items-end gap-1">
+							<span
+								id="suhu"
+								class="mono text-white text-6xl font-bold leading-none"
+								>--</span
+							>
+							<span class="mono text-sun text-2xl mb-1">°C</span>
+						</div>
+						<div
+							class="mt-3 flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 w-fit"
+						>
+							<span class="text-fog text-xs">Terasa seperti</span>
+							<span id="feels-like" class="mono text-sun text-sm font-bold"
+								>-- °C</span
+							>
+						</div>
+					</div>
+				</div>
+
+				<!-- Kondisi -->
+				<div class="card p-6 flex flex-col justify-between">
+					<span class="text-fog text-xs font-semibold tracking-widest uppercase"
+						>Kondisi</span
+					>
+					<div>
+						<div class="text-5xl mb-3">🌤</div>
+						<strong id="kondisi" class="text-sky-ink text-xl font-bold"
+							>--</strong
+						>
+					</div>
+				</div>
+
+				<!-- Kelembapan -->
+				<div class="card p-6 flex flex-col justify-between">
+					<span class="text-fog text-xs font-semibold tracking-widest uppercase"
+						>Kelembapan</span
+					>
+					<div>
+						<div class="flex items-end gap-1">
+							<span
+								id="kelembapan"
+								class="mono text-sky-ink text-5xl font-bold leading-none"
+								>--</span
+							>
+							<span class="mono text-rain text-lg mb-1">%</span>
+						</div>
+						<div class="w-full bg-cloud h-2 rounded-full mt-3 overflow-hidden">
+							<div
+								id="kelembapan-bar"
+								class="bg-rain h-full rounded-full transition-all duration-700"
+								style="width: 0%"
+							></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Kecepatan Angin -->
+				<div
+					class="card-accent col-span-2 md:col-span-1 p-6 flex flex-col justify-between"
+				>
+					<span
+						class="text-white/70 text-xs font-semibold tracking-widest uppercase"
+						>Kecepatan Angin</span
+					>
+					<div>
+						<div class="flex items-end gap-1">
+							<span
+								id="kecepatan-angin"
+								class="mono text-white text-5xl font-bold leading-none"
+								>--</span
+							>
+							<span class="mono text-white/70 text-sm mb-1">km/j</span>
+						</div>
+						<span class="text-white/60 text-xs mt-2 block"
+							>💨 Angin permukaan</span
+						>
+					</div>
+				</div>
+
+				<!-- Arah Angin -->
+				<div class="card p-6 flex flex-col justify-between">
+					<span class="text-fog text-xs font-semibold tracking-widest uppercase"
+						>Arah Angin</span
+					>
+					<div class="flex flex-col gap-2">
+						<div class="text-4xl">
+							<img src="asset/compass (1).svg" />
+						</div>
+						<strong id="arah-angin" class="mono text-sky-ink text-3xl font-bold"
+							>--</strong
+						>
+					</div>
+				</div>
+
+				<!-- Update time -->
+				<div
+					class="col-span-2 md:col-span-3 bg-white/60 border border-[#dde6ef] rounded-2xl p-4 flex items-center justify-between"
+				>
+					<span class="text-fog text-xs font-semibold tracking-widest uppercase"
+						>Terakhir Diperbarui</span
+					>
+					<small id="update-time" class="mono text-sky-ink text-xs font-bold"
+						>--</small
+					>
+				</div>
+			</div>
+		</main>
+
+		<script src="main.js"></script>
+	</body>
+</html>
